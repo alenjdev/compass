@@ -6,6 +6,14 @@ export const Compass = () => {
   const [angle, setAngle] = useState(0);
   const [distance, setDistance] = useState(0);
 
+  const shouldClearData = (
+    lastUpdate: number,
+    scruttingTime: number,
+    seconds: number
+  ) => {
+    return lastUpdate + seconds * 1000 < scruttingTime;
+  };
+
   useEffect(() => {
     App.addModuleDataListener(receiveModuleData);
   }, []);
@@ -20,10 +28,20 @@ export const Compass = () => {
       const latestState = getLatestData(streams, stream);
 
       if (typeof latestState !== "string" && latestState !== undefined) {
-        if (streams[stream].data[0].name === "home.angle")
-          setAngle(latestState);
-        if (streams[stream].data[0].name === "home.distance")
-          setDistance(latestState);
+        if (streams[stream].data[0].name === "home.angle") {
+          if (shouldClearData(latestState[0], newValue.time, 10)) {
+            setAngle(0);
+            return;
+          }
+          setAngle(latestState[1]);
+        }
+        if (streams[stream].data[0].name === "home.distance") {
+          if (shouldClearData(latestState[0], newValue.time, 10)) {
+            setAngle(0);
+            return;
+          }
+          setDistance(latestState[1]);
+        }
       }
     });
   };
@@ -99,11 +117,9 @@ export const Compass = () => {
 };
 
 const getLatestData = (
-  moduleData: {
-    [stream_name: string]: Stream;
-  },
+  moduleData: any,
   stream: string
-): number | undefined | string => {
+): [number, number] | undefined | string => {
   if (moduleData[stream] === undefined) {
     return "No stream.";
   }
@@ -121,5 +137,5 @@ const getLatestData = (
   if (!latestPoint) {
     return "No datapoints.";
   }
-  return latestPoint[1];
+  return latestPoint;
 };
