@@ -33,7 +33,7 @@ export const Compass = () => {
             setAngle(0);
             return;
           }
-          setAngle(latestState[1]);
+          setAngle(latestState[1] * -1);
         }
         if (streams[stream].data[0].name === "home.distance") {
           if (shouldClearData(latestState[0], newValue.time, 10)) {
@@ -75,7 +75,7 @@ export const Compass = () => {
               cy="12.125"
               r="6.43592"
               stroke="white"
-              stroke-width="2"
+              strokeWidth="2"
             />
             <path d="M12 4.79382V2.14062" stroke="white" />
             <path d="M12 22.1094V19.0024" stroke="white" />
@@ -90,19 +90,19 @@ export const Compass = () => {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             style={{
-              transform: `scale(${1 + distance / 50})`,
+              transform: `scale(${1 + distance / 10})`,
               transition: "100ms",
             }}
           >
             <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
+              fillRule="evenodd"
+              clipRule="evenodd"
               d="M13 4V20H11V4H13Z"
               fill="white"
             />
             <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
+              fillRule="evenodd"
+              clipRule="evenodd"
               d="M11.2929 3.29289C11.6834 2.90237 12.3166 2.90237 12.7071 3.29289L18.7071 9.29289L17.2929 10.7071L12 5.41421L6.70712 10.7071L5.29291 9.29289L11.2929 3.29289Z"
               fill="white"
             />
@@ -110,7 +110,7 @@ export const Compass = () => {
         )}
       </div>
       <div className={styles["distance-container"]}>
-        <span>{`${distance}M`}</span>
+        <span>{`${distance.toFixed(2)}M`}</span>
       </div>
     </div>
   );
